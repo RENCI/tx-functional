@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
     setuptools.setup(
-        name="tx-parallex",
+        name="tx-functional",
         version="0.0.1",
         author="Hao Xu",
         author_email="xuhao@renci.org",
