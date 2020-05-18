@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
     setuptools.setup(
         name="tx-functional",
-        version="0.0.1",
+        version="0.0.2",
         author="Hao Xu",
         author_email="xuhao@renci.org",
         description="A pickleable generic functional programming library",
