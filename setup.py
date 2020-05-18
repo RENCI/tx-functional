@@ -5,14 +5,18 @@ with open("README.md", "r") as fh:
 
     setuptools.setup(
         name="tx-functional",
-        version="0.0.2",
+        version="0.0.5",
+        license="MIT",
         author="Hao Xu",
         author_email="xuhao@renci.org",
         description="A pickleable generic functional programming library",
         long_description=long_description,
         long_description_content_type="text/markdown",
         url="https://github.com/RENCI/tx-functional",
-        packages=setuptools.find_packages(exclude=["tests", "tests.*"]),
+        packages=setuptools.find_packages("src", exclude=["tests", "tests.*"]),
+        package_dir={
+            "": "src"
+        },
         install_requires=[
         ],
         classifiers=[
