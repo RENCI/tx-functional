@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
     setuptools.setup(
         name="tx-functional",
-        version="0.0.9",
+        version="0.0.10",
         license="MIT",
         author="Hao Xu",
         author_email="xuhao@renci.org",
