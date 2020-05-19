@@ -28,8 +28,12 @@ def test_ne_on_Right():
     assert Right(1) != Left(1)
 
 
+def test_bind_on_Right0():
+    assert Right(1).bind(lambda x:x) == 1
+
+    
 def test_bind_on_Right():
-    assert Right(1).bind(lambda x:Right(2)) == Right(2)
+    assert Right(1).bind(lambda x:Right(x+1)) == Right(2)
 
     
 def test_bind_on_Left():

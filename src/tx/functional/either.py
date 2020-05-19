@@ -6,13 +6,7 @@ class Either(Monad):
     def pure(value):
         return Right(value)
 
-    def bind(self, f):
-        if isinstance(self, Left):
-            return self
-        else:
-            return f(self)
-
-
+    
 class Left(Either):
     def __init__(self, value):
         self.value = value
@@ -23,6 +17,9 @@ class Left(Either):
     __repr__ = autorepr(["value"])
     __str__, __unicode__ = autotext("Left({self.value})")
     
+    def bind(self, f):
+        return self
+
 
 class Right(Either):
     def __init__(self, value):
@@ -33,5 +30,9 @@ class Right(Either):
 
     __repr__ = autorepr(["value"])
     __str__, __unicode__ = autotext("Right({self.value})")
+
+    def bind(self, f):
+        return f(self.value)
+
 
     
