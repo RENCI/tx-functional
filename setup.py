@@ -1,3 +1,5 @@
+from glob import glob
+from os.path import basename, splitext
 import setuptools
 
 with open("README.md", "r") as fh:
@@ -5,7 +7,7 @@ with open("README.md", "r") as fh:
 
     setuptools.setup(
         name="tx-functional",
-        version="0.0.5",
+        version="0.0.7",
         license="MIT",
         author="Hao Xu",
         author_email="xuhao@renci.org",
@@ -17,6 +19,7 @@ with open("README.md", "r") as fh:
         package_dir={
             "": "src"
         },
+        py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],
         install_requires=[
         ],
         classifiers=[
