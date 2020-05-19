@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
     setuptools.setup(
         name="tx-functional",
-        version="0.0.11",
+        version="0.0.12",
         license="MIT",
         author="Hao Xu",
         author_email="xuhao@renci.org",
@@ -21,6 +21,7 @@ with open("README.md", "r") as fh:
         },
         py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],
         install_requires=[
+            "autorepr==0.3.0"
         ],
         classifiers=[
             "Programming Language :: Python :: 3",

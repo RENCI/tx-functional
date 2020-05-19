@@ -1,3 +1,4 @@
+from autorepr import autorepr, autotext
 from tx.functional.monad import Monad
 
 class Either(Monad):
@@ -18,6 +19,9 @@ class Left(Either):
 
     def __eq__(self, other):
         return type(self) is type(other) and self.value == other.value
+
+    __repr__ = autorepr(["value"])
+    __str__, __unicode__ = autotext("Left({self.value})")
     
 
 class Right(Either):
@@ -27,5 +31,7 @@ class Right(Either):
     def __eq__(self, other):
         return type(self) is type(other) and self.value == other.value
 
+    __repr__ = autorepr(["value"])
+    __str__, __unicode__ = autotext("Right({self.value})")
 
     
