@@ -44,8 +44,8 @@ identity = lambda a: a
 
 
 class monad_utils:
-    def __init__(self, _pure):
-        self._pure = _pure
+    def __init__(self, monad):
+        self._pure = monad.pure
 
     @property
     def pure(self):
@@ -57,11 +57,11 @@ class monad_utils:
 
     @property
     def fmap(self):
-        return lambda f: lambda a: self.pure(f) * a
+        return lambda f: lambda ma: ma.map(f)
 
     @property
     def liftA2(self):
-        return lambda f: lambda a: lambda b: self.fmap(f)(a) * b 
+        return lambda f: lambda ma: lambda mb: ma.map(f).ap(mb) 
 
     @property
     def sequence(self):
