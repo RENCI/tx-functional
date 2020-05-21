@@ -29,17 +29,6 @@ uncurry = lambda f: lambda ab: f(ab[0])(ab[1])
 
 foldl = lambda f: lambda a: lambda bs: functools.reduce(to_python2(uncurry(f)), bs, a)
 
-def case_uncurried_uncurried_python(a,f,g):
-    if isinstance(a, Left):
-        return f(a.value)
-    else:
-        if isinstance(a, Right):
-            return g(a.value)
-        else:
-            raise RuntimeError(f"cannot apply case to {a}")
-    
-case = curry(curry(from_python3(case_uncurried_uncurried_python)))
-
 identity = lambda a: a
 
 
