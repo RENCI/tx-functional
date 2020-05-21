@@ -31,6 +31,8 @@ foldl = lambda f: lambda a: lambda bs: functools.reduce(to_python2(uncurry(f)), 
 
 identity = lambda a: a
 
+const = lambda a: lambda b: a
+
 
 class monad_utils:
     def __init__(self, monad):
