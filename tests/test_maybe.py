@@ -56,5 +56,12 @@ def test_rec():
     assert Nothing.rec(lambda x:x+2, 3) == 3
     assert Just(2).rec(lambda x:x+2, 3) == 4
 
+    
+def test_iter_Nothing():
+    assert [i for i in Just(True)] == [True]
 
+    
+def test_iter_Just():
+    assert [i for i in Nothing] == []
+    
     

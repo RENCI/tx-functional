@@ -14,6 +14,9 @@ class Just(Maybe):
     def __eq__(self, other):
         return type(self) is type(other) and self.value == other.value
 
+    def __iter__(self):
+        return iter([self.value])
+
     __repr__ = autorepr(["value"])
     __str__, __unicode__ = autotext("Just({self.value})")
     
@@ -30,6 +33,9 @@ class _Nothing(Maybe):
 
     def __eq__(self, other):
         return type(self) is type(other)
+
+    def __iter__(self):
+        return iter([])
 
     __repr__ = autorepr([])
     __str__, __unicode__ = autotext("Nothing")
