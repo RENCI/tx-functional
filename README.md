@@ -8,7 +8,7 @@ The goal of this is
  * Work with mypy
  * Pickleable
 
-We choose functions in uncurried for because mypy doesn't support type variable that only appear in return type of a function signature.
+We choose functions in uncurried form because mypy doesn't support type variable that only appear in return type of a function signature.
 
 ## classes
 
