@@ -3,7 +3,8 @@
 # tx-functional
 Generic functional programming library for Python
 
- * The goal of this is to be close to Haskell.
+The goal of this is
+ * Close to Haskell.
  * Work with mypy
  * Pickleable
 
