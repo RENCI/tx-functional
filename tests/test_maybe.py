@@ -1,4 +1,5 @@
-from tx.functional.maybe import Maybe, Just, Nothing, maybe
+from tx.functional.maybe import Maybe, Just, Nothing, maybe_monad
+import tx.functional.maybe as maybe
 
 
 def test_eq_on_Just():
@@ -31,7 +32,7 @@ def test_bind_on_Nothing():
 
 
 def test_pure():
-    assert Maybe.pure(1) == Just(1)
+    assert maybe_monad.pure(1) == Just(1)
 
     
 def test_map_on_Just():

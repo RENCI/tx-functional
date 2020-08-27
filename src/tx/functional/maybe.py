@@ -1,58 +1,54 @@
-from autorepr import autorepr, autotext
-from tx.functional.monad import Monad
-from tx.functional.utils import identity, monad_utils
+from __future__ import annotations
+from .monad import Monad
+from .utils import identity, flip, to_python2, Arrow
+from typing import Generic, TypeVar, Callable, Optional, Iterator, List
+from abc import ABC
+from dataclasses import dataclass
 
-class Maybe(Monad):
-    @staticmethod
-    def pure(value):
-        return Just(value)
+S = TypeVar("S")
 
-class Just(Maybe):
-    def __init__(self, value):
-        self.value = value
+T = TypeVar("T")
 
-    def __eq__(self, other):
-        return type(self) is type(other) and self.value == other.value
+class Maybe(ABC, Generic[S]):
+    def bind(self, f : Arrow[S, Maybe[T]]) -> Maybe[T]:
+        return bind(self, f)
 
-    def __iter__(self):
-        return iter([self.value])
+    def map(self, f : Arrow[S, T]) -> Maybe[T]:
+        return maybe_monad.map(f, self)
 
-    __repr__ = autorepr(["value"])
-    __str__, __unicode__ = autotext("Just({self.value})")
+    def rec(self, f : Arrow[S, T], g: T) -> T:
+        return rec(self, f, g)
+
+    def __iter__(self) -> Iterator[S]:
+        empty_list : List[S] = []
+        return iter(self.rec(lambda a: [a], empty_list))
+
+@dataclass
+class Just(Maybe[T]):
+    value: T
     
-    def bind(self, f):
-        return f(self.value)
+@dataclass
+class _Nothing(Maybe[T]):
+    pass
 
-    def rec(self,f,g):
-        return f(self.value)
+Nothing = _Nothing[T]()
 
-    
-class _Nothing(Maybe):
-    def __init__(self):
-        pass
+class Proxy(Generic[T]):
+    pass
 
-    def __eq__(self, other):
-        return type(self) is type(other)
+def rec(ma: Maybe[S], f: Arrow[S, T], g: T) ->  T:
+    return f(ma.value) if isinstance(ma, Just) else g
 
-    def __iter__(self):
-        return iter([])
+def pure(value: T) -> Maybe[T]:
+    return Just(value)
 
-    __repr__ = autorepr([])
-    __str__, __unicode__ = autotext("Nothing")
+def bind(ma: Maybe[S], f: Arrow[S, Maybe[T]]) -> Maybe[T]:
+    return rec(ma, f, Nothing)
 
-    def bind(self, f):
-        return self
+maybe_functor = maybe_applicative = maybe_monad = Monad(pure, bind)
 
-    def rec(self,f,g):
-        return g
-
-    
-Nothing = _Nothing()
-
-maybe = monad_utils(Maybe)
-
-maybe.from_python = lambda a: Nothing if a is None else Just(a)
-    
-maybe.to_python = lambda a: a.rec(identity, None)
+from_python = lambda a: Nothing if a is None else Just(a)
+   
+to_python = lambda a: a.rec(identity, None)
 
     

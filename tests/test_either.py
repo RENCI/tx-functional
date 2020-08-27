@@ -1,4 +1,4 @@
-from tx.functional.either import Either, Left, Right
+from tx.functional.either import Either, Left, Right, either_monad
 import pickle
 
 
@@ -41,7 +41,7 @@ def test_bind_on_Left():
 
 
 def test_pure():
-    assert Either.pure(1) == Right(1)
+    assert either_monad.pure(1) == Right(1)
 
     
 def test_map_on_Right():

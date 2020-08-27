@@ -1,61 +1,63 @@
 import functools
+from typing import Callable, TypeVar, Tuple, List
 
-to_python0 = lambda f: lambda: f(())
+S = TypeVar("S")
 
-def from_python0(f):
-    def fp02(a):
-        if a == ():
-            return f()
-        else:
-            raise RuntimeError(f"type error: the type of {a} is not unit")
+T = TypeVar("T")
 
-to_python2 = lambda f: lambda a, b: f((a, b))
+U = TypeVar("U")
 
-from_python2 = lambda f: lambda a: f(a[0], a[1])
+V = TypeVar("V")
 
-to_python3 = lambda f: lambda a, b, c: f(((a, b), c))
+Arrow = Callable[[S], T]
 
-from_python3 = lambda f: lambda a: f(a[0][0], a[0][1], a[1])
+def to_python0(f: Arrow[Tuple[()], T]) ->  Callable[[], T]:
+    return lambda: f(())
 
-lassoc = lambda a: ((a[0], a[1][0]), a[1][1])
+def from_python0(f: Callable[[], T]) -> Arrow[Tuple[()], T]:
+    return lambda _: f()
 
-rassoc = lambda a: (a[0][0], (a[0][1], a[1]))
+def to_python2(f : Arrow[Tuple[S, T], U]) ->  Callable[[S, T], U]:
+    return lambda a, b: f((a, b))
 
-append = lambda l: lambda a : l + [a]
+def from_python2(f : Callable[[S, T], U]) -> Arrow[Tuple[S, T], U]:
+    return lambda a: f(a[0], a[1])
 
-curry = lambda f: lambda a: lambda b: f((a, b))
+def to_python3(f : Arrow[Tuple[Tuple[S, T], U], V]) -> Callable[[S, T, U], V]:
+    return lambda a, b, c: f(((a, b), c))
 
-uncurry = lambda f: lambda ab: f(ab[0])(ab[1])
+def from_python3(f : Callable[[S, T, U], V]) -> Arrow[Tuple[Tuple[S, T], U], V]:
+    return lambda a: f(a[0][0], a[0][1], a[1])
 
-foldl = lambda f: lambda a: lambda bs: functools.reduce(to_python2(uncurry(f)), bs, a)
+def lassoc(a : Tuple[S, Tuple[T, U]]) -> Tuple[Tuple[S, T], U]:
+    return ((a[0], a[1][0]), a[1][1])
 
-identity = lambda a: a
+def rassoc(a : Tuple[Tuple[S, T], U]) -> Tuple[S, Tuple[T, U]]:
+    return (a[0][0], (a[0][1], a[1]))
 
-const = lambda a: lambda b: a
+def curry(f : Callable[[S, T], U]) -> Arrow[S, Arrow[T, U]]:
+    return lambda a: lambda b: f(a, b)
+
+def uncurry(f : Arrow[S, Arrow[T, U]]) -> Callable[[S, T], U]:
+    return lambda a, b: f(a)(b)
+
+def foldl(f : Callable[[S, T], S], a: S, bs: List[T]) ->  S:
+    return functools.reduce(f, bs, a)
+
+def identity(a : T) -> T:
+    return a
+
+def const(a : S, b: T) -> S:
+    return a
+
+def flip(f : Callable[[S, T], U]) -> Callable[[T, S], U]:
+    return lambda a, b: f(b, a)
+
+def compose(f: Arrow[T, U], g: Arrow[S, T]) -> Arrow[S, U]:
+    return lambda a: f(g(a))
 
 
-class monad_utils:
-    def __init__(self, monad):
-        self._pure = monad.pure
 
-    @property
-    def pure(self):
-        return self._pure
 
-    @property
-    def bind(self):
-        return lambda ma: lambda f: ma.bind(f)
-
-    @property
-    def fmap(self):
-        return lambda f: lambda ma: ma.map(f)
-
-    @property
-    def liftA2(self):
-        return lambda f: lambda ma: lambda mb: ma.map(f).ap(mb) 
-
-    @property
-    def sequence(self):
-        return lambda ms: foldl(self.liftA2(append))(self.pure([]))(ms)
 
 

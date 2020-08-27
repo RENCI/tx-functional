@@ -21,7 +21,6 @@ with open("README.md", "r") as fh:
         },
         py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],
         install_requires=[
-            "autorepr==0.3.0"
         ],
         classifiers=[
             "Programming Language :: Python :: 3",

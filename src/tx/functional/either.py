@@ -1,46 +1,54 @@
-from autorepr import autorepr, autotext
-from tx.functional.monad import Monad
-from tx.functional.utils import monad_utils
+from __future__ import annotations
+from .monad import Monad
+from .utils import const, flip, to_python2, Arrow
 
-class Either(Monad):
-    @staticmethod
-    def pure(value):
-        return Right(value)
+from typing import Generic, TypeVar, Callable, Iterator, List, cast
+from abc import ABC
+from dataclasses import dataclass
+
+T = TypeVar("T")
+
+S = TypeVar("S")
+
+U = TypeVar("U")
+
+class Either(ABC, Generic[S, T]):
+    def bind(self, f : Arrow[T, Either[S, U]]) -> Either[S, U]:
+        return bind(self, f)
+
+    def map(self, f : Arrow[T, U]) -> Either[S, U]:
+        return either_monad.map(f, self)
+
+    def rec(self, f : Arrow[S, U], g: Arrow[T, U]) -> U:
+        return rec(self, f, g)
+
+    def __iter__(self) -> Iterator[T]:
+        empty_list : List[T] = []
+        return iter(self.rec(lambda _: empty_list, lambda a: [a]))
 
 
-class Left(Either):
-    def __init__(self, value):
-        self.value = value
-
-    def __eq__(self, other):
-        return type(self) is type(other) and self.value == other.value
-
-    __repr__ = autorepr(["value"])
-    __str__, __unicode__ = autotext("Left({self.value})")
+@dataclass
+class Left(Either[S, T]):
+    value: S
     
-    def bind(self, f):
-        return self
 
-    def rec(self,f,g):
-        return f(self.value)
-
-
-class Right(Either):
-    def __init__(self, value):
-        self.value = value
-
-    def __eq__(self, other):
-        return type(self) is type(other) and self.value == other.value
-
-    __repr__ = autorepr(["value"])
-    __str__, __unicode__ = autotext("Right({self.value})")
-
-    def bind(self, f):
-        return f(self.value)
-
-    def rec(self,f,g):
-        return g(self.value)
+@dataclass
+class Right(Either[S, T]):
+    value: T
 
 
-either = monad_utils(Either)
+def rec(ma: Either[S, T], f: Arrow[S, U], g: Arrow[T, U]) -> U:
+    return f(ma.value) if isinstance(ma, Left) else g(cast(Right[S, T], ma).value)
+
+
+def pure(a: T) -> Either[S, T]:
+    return Right(a)
+
+
+def bind(ma: Either[S, T], f: Arrow[T, Either[S, U]]) -> Either[S, U]:
+    return rec(ma, lambda b: Left(b), f)
+
+either_functor = either_applicative = either_monad = Monad(pure, bind)
+
+
     
