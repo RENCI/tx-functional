@@ -35,7 +35,7 @@ ap: (F[S -> T], F[S]) -> F[T]
 
 The `Monad` class is defined in `tx.functional.monad`.
 It takes in `_pure` and `_bind`. A monad `F` is an applicative and a functor.
-A monad is defined by an additional `bind` functions
+A monad is defined by an additional `bind` function
 ```
 bind: (F[S], S -> F[T]) -> F[T]
 ```
