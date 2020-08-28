@@ -44,6 +44,9 @@ def uncurry(f : Arrow[S, Arrow[T, U]]) -> Callable[[S, T], U]:
 def foldl(f : Callable[[S, T], S], a: S, bs: List[T]) ->  S:
     return functools.reduce(f, bs, a)
 
+def foldr(f : Callable[[S, T], T], a: T, bs: List[S]) ->  T:
+    return foldl(flip(f), reversed(bs), a)
+
 def identity(a : T) -> T:
     return a
 
